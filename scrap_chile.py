@@ -65,31 +65,67 @@ df_2 = pd.read_csv(url[1],sep=',')
 df_3 = pd.read_csv(url[2],sep=',') 
 
 
+### pasar a una funcion 
+if os.path.isfile('./comunas_list.txt') == True:
+	print('existe el directorio comuna')
+	x = open('./comunas_list.txt','r+')
+	for comuna_ in df_1['Comuna'].values:
+	    x.write(str(comuna_)+'\n')
+	x.close()
+else:
+	print('no existe el directorio comuna')
+	x = open('./comunas_list.txt','w')
+	x.close()
+	print('directorio creado')
+	x = open('./comunas_list.txt','r+')
+	for comuna_ in df_1['Comuna'].values:
+	    x.write(str(comuna_)+'\n')
+	x.close()
+### pasar a una funcion
+if os.path.isfile('./regiones_list.txt') == True:
+	print('existe el directorio region')
+	xx = open('./regiones_list.txt','r+')
+	for region_ in df_1['Region'].values:
+	    xx.write(str(region_)+'\n')
+	xx.close()
+else:
+	print('no existe el directorio region')
+	xx = open('./regiones_list.txt','w')
+	xx.close()
+	print('directorio creado')
+	xx = open('./regiones_list.txt','r+')
+	for region_ in df_1['Region'].values:
+	    xx.write(str(region_)+'\n')
+	xx.close()
 
 
 
-try:
-	while True:
-		print('					Usar KeyboardInterrupt para finalizar.')
-		print(' 					Datos cargados del repositorio del MINSAL .')
-		print('					Respete mayusculas y no use tildes')
-		print('')
-		numero = int(input('pulse 1 para region y 2 para ciudad '))
 
-		if numero == 1:
-			palabra_region = input('Ingrese el nombre de la region: ')
-			region_funcion = region(palabra_region,df_2,df_3)
-			valor,fecha,last_day,activos = region_funcion[0],region_funcion[1],region_funcion[2],region_funcion[3]
+### menu options and define
 
-			palabra_comuna = ''
-		elif numero == 2:
-			palabra_comuna = input('Ingrese el nombre de la comuna: ')
-			comuna_funcion = comuna(palabra_comuna,df_1,df_3)
-			valor,palabra_region,fecha,last_day,activos,fecha_activos  = comuna_funcion[0],comuna_funcion[1],comuna_funcion[2],comuna_funcion[3],comuna_funcion[4],comuna_funcion[5]
-		else:
-			print('Numero ingresado no valido')
-			numero = input('pulse 1 para region y 2 para ciudad: ')
+menu = {}
+menu['1']="Ingrese nombre de region." 
+menu['2']="Ingrese nombre de comuna."
+menu['3']="Abrir lista nombres comuna"
+menu['4']="Abrir lista nombres regiones"
+menu['5']="Salir \n"
+while True: 
+	print(' 			Datos cargados del repositorio del MINSAL .')
+	print('')
+	options=menu.keys()
+	options = sorted(options)
+	#options.sort()
+	for entry in options: 
+		print(entry, menu[entry])
 
+	selection=input("Seleccione opcion : ") 
+	if selection =='1': 	
+		palabra_region = input('Ingrese el nombre de la region: ')
+		region_funcion = region(palabra_region,df_2,df_3)
+		valor,fecha,last_day,activos = region_funcion[0],region_funcion[1],region_funcion[2],region_funcion[3]
+		palabra_comuna = ''
+
+		### pasar a una funcion
 		os.system('clear')
 		now = datetime.now()
 		current_time = str(now.strftime("%H:%M:%S"))
@@ -100,12 +136,41 @@ Casos totales: {}	-> {} <- Last Upload
 Casos activos: {}	-> {} <- Last Upload
 Casos Ultimo dia: {}
 
-			'''.format(palabra_region,palabra_comuna,valor,fecha,activos,fecha_activos,last_day))
-		print('\n \n Last update: ', current_time)
-		
+		'''.format(palabra_region,palabra_comuna,valor,fecha,activos,fecha_activos,last_day))
+		print('\n \nLast update: ', current_time)
+				
 		time.sleep(0.1)
+	elif selection == '2': 
+		palabra_comuna = input('Ingrese el nombre de la comuna: ')
+		comuna_funcion = comuna(palabra_comuna,df_1,df_3)
+		valor,palabra_region,fecha,last_day,activos,fecha_activos  = comuna_funcion[0],comuna_funcion[1],comuna_funcion[2],comuna_funcion[3],comuna_funcion[4],comuna_funcion[5]
+		
+		### Pasar a una funcion
+		os.system('clear')
+		now = datetime.now()
+		current_time = str(now.strftime("%H:%M:%S"))
+		print('''
+Region: {}
+Comuna: {}
+Casos totales: {}	-> {} <- Last Upload
+Casos activos: {}	-> {} <- Last Upload
+Casos Ultimo dia: {}
 
-except KeyboardInterrupt:
-	os.system('clear')
-	print('End Program')
+		'''.format(palabra_region,palabra_comuna,valor,fecha,activos,fecha_activos,last_day))
+		print('\n \nLast update: ', current_time)
+				
+		time.sleep(0.1)
+	elif selection == '3':
+		os.system('open comunas_list.txt')
+		os.system('clear')
+	elif selection == '4':
+		os.system('open regiones_list.txt')
+		os.system('clear')
+	elif selection == '5': 
+		break
+	else: 
+		os.system('clear')
+		print('Numero ingresado no valido')
 
+
+	
